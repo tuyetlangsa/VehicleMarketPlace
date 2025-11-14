@@ -23,7 +23,7 @@ public class Listing
     public string? Location { get; set; }
     public ListingStatus Status { get; set; } // pending, approved, reject, sold. 
     public DateTime CreatedAt { get; set; }
-    public DateTime UpdatedAt { get; set; }
+    public DateTime? UpdatedAt { get; set; }
 
     // Navigation properties
     public User User { get; set; } = null!;

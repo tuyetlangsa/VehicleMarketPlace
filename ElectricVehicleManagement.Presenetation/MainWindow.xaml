@@ -1,6 +1,7 @@
 ﻿<Window x:Class="ElectricVehicleManagement.Presenetation.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:local="clr-namespace:ElectricVehicleManagement.Data.Models;assembly=ElectricVehicleManagement.Data"
         Title="Auth0 OIDC Client Sample"
         WindowStartupLocation="CenterScreen"
         Height="1000"
@@ -44,12 +45,49 @@
                     Click="logoutButton_Click"
                     Visibility="Collapsed" />
         </StackPanel>
+        
+        <ScrollViewer VerticalScrollBarVisibility="Auto">
+        <ItemsControl x:Name="ListingsItemsControl">
+            <ItemsControl.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <WrapPanel Orientation="Horizontal" />
+                </ItemsPanelTemplate>
+            </ItemsControl.ItemsPanel>
 
-        <!-- Main content -->
-        <TextBox x:Name="resultTextBox"
-                 TextWrapping="Wrap"
-                 FontFamily="Courier New"
-                 Margin="10"
-                 VerticalScrollBarVisibility="Auto" />
+            <ItemsControl.ItemTemplate>
+                <DataTemplate DataType="{x:Type local:Listing}">
+                    <Border CornerRadius="10"
+                            Margin="10"
+                            Width="230"
+                            Padding="10"
+                            BorderBrush="#DDD"
+                            BorderThickness="1"
+                            Background="White">
+                        <StackPanel>
+                            <Image Height="150"
+                                   Stretch="UniformToFill"
+                                   Margin="0 0 0 8"
+                                   Source="{Binding Images[0].ImageUrl}" />
+
+                            <TextBlock Text="{Binding Title}"
+                                       FontSize="16"
+                                       FontWeight="Bold"
+                                       Margin="0 0 0 4" />
+
+                            <TextBlock Text="{Binding VehicleBrand}"
+                                       FontWeight="SemiBold" />
+                            <TextBlock Text="{Binding VehicleModel}" />
+
+                            <TextBlock Text="{Binding Price, StringFormat=C}"
+                                       Foreground="Green"
+                                       FontSize="16"
+                                       FontWeight="Bold"
+                                       Margin="0 6 0 0"/>
+                        </StackPanel>
+                    </Border>
+                </DataTemplate>
+            </ItemsControl.ItemTemplate>
+        </ItemsControl>
+    </ScrollViewer>
     </DockPanel>
 </Window>
