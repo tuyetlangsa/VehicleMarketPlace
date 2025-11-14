@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.12.35506.116 d17.12
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ElectricVehicleManagement.Presenetation", "ElectricVehicleManagement.Presenetation\ElectricVehicleManagement.Presenetation.csproj", "{C23A898C-AC2D-47A2-97DF-B90693527F31}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ElectricVehicleManagement.Presentation", "ElectricVehicleManagement.Presentation\ElectricVehicleManagement.Presentation.csproj", "{C23A898C-AC2D-47A2-97DF-B90693527F31}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ElectricVehicleManagement.Service", "ElectricVehicleManagement.Service\ElectricVehicleManagement.Service.csproj", "{2F101C6F-C949-427A-8F29-F275AC914C2F}"
 EndProject

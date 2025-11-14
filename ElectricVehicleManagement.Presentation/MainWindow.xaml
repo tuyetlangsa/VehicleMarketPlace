@@ -1,4 +1,4 @@
-﻿<Window x:Class="ElectricVehicleManagement.Presenetation.MainWindow"
+﻿<Window x:Class="ElectricVehicleManagement.Presentation.MainWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:local="clr-namespace:ElectricVehicleManagement.Data.Models;assembly=ElectricVehicleManagement.Data"

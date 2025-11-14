@@ -45,10 +45,8 @@ public class ListingConfiguration : IEntityTypeConfiguration<Listing>
             .HasColumnType("timestamptz")
             .IsRequired();
         builder.Property(v => v.UpdatedAt)
-            .HasColumnType("timestamptz")
-            .IsRequired();
-        
-        
+            .HasColumnType("timestamptz");
+        builder.Property(v => v.IsVisible).HasDefaultValue(false);
         builder.Property(v => v.Status).HasConversion<byte>();
         builder.Property(v => v.BodyType).HasConversion<byte>();
         builder.Property(v => v.TransmissionType).HasConversion<byte>();

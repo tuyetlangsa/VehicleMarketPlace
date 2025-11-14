@@ -20,7 +20,7 @@ using ElectricVehicleManagement.Service.User;
 using Microsoft.Identity.Client;
 using Microsoft.Win32;
 
-namespace ElectricVehicleManagement.Presenetation
+namespace ElectricVehicleManagement.Presentation
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml

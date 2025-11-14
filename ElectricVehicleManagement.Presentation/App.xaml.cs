@@ -13,7 +13,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace ElectricVehicleManagement.Presenetation
+namespace ElectricVehicleManagement.Presentation
 {
     /// <summary>
     /// Interaction logic for App.xaml
@@ -73,6 +73,5 @@ namespace ElectricVehicleManagement.Presenetation
             services.AddTransient<MainWindow>();
         }
     }
-    
 }
 
