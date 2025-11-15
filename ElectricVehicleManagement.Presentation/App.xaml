@@ -1,7 +1,7 @@
-﻿<Application x:Class="ElectricVehicleManagement.Presenetation.App"
+﻿<Application x:Class="ElectricVehicleManagement.Presentation.App"
              xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
              xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-             xmlns:local="clr-namespace:ElectricVehicleManagement.Presenetation"
+             xmlns:local="clr-namespace:ElectricVehicleManagement.Presentation"
      >
     <Application.Resources>
          

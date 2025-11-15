@@ -1,4 +1,5 @@
-﻿using System.Text;
+﻿using System.Collections;
+using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -12,27 +13,36 @@ using Auth0.OidcClient;
 using Duende.IdentityModel.OidcClient.Browser;
 using Duende.IdentityModel.OidcClient;
 using System.Configuration;
+using ElectricVehicleManagement.Data.Models;
+using ElectricVehicleManagement.Service.Cloudinary;
+using ElectricVehicleManagement.Service.Listing;
 using ElectricVehicleManagement.Service.User;
 using Microsoft.Identity.Client;
+using Microsoft.Win32;
 
-namespace ElectricVehicleManagement.Presenetation
+namespace ElectricVehicleManagement.Presentation
 {
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
     public partial class MainWindow : Window
     {
-        private Auth0Client client;
+        private Auth0Client _client;
+        private readonly ICloudinaryService _cloudinaryService;
+        private readonly IUserService _userService;
+        private readonly IListingService _listingService;
+
         readonly string[] _connectionNames = new string[]
         {
             "Username-Password-Authentication",
             "google-oauth2"        
         };
 
-        private readonly IUserService _userService;
-        public MainWindow(IUserService userService)
+        public MainWindow(IUserService userService, ICloudinaryService cloudinaryService, IListingService listingService)
         {
             _userService = userService;
+            _cloudinaryService = cloudinaryService;
+            _listingService = listingService;
             InitializeComponent();
         }
 
@@ -40,13 +50,21 @@ namespace ElectricVehicleManagement.Presenetation
         {
             connectionNameComboBox.ItemsSource = _connectionNames;
             connectionNameComboBox.SelectedIndex = 0;
+            LoadListings();
+        }
+        
+        
+        private async void LoadListings()
+        {
+            var listings = await  _listingService.GetListings();
+            ListingsItemsControl.ItemsSource = listings;
         }
         private async void LoginButton_OnClick(object sender, RoutedEventArgs e)
         {
             string domain = ConfigurationManager.AppSettings["Auth0:Domain"];
             string clientId = ConfigurationManager.AppSettings["Auth0:ClientId"];
 
-            client = new Auth0Client(new Auth0ClientOptions
+            _client = new Auth0Client(new Auth0ClientOptions
             {
                 Domain = domain,
                 ClientId = clientId
@@ -57,7 +75,7 @@ namespace ElectricVehicleManagement.Presenetation
             if (!string.IsNullOrEmpty(connectionNameComboBox.Text))
                 extraParameters.Add("connection", connectionNameComboBox.Text);
 
-            var loginResult = await client.LoginAsync(extraParameters: extraParameters);
+            var loginResult = await _client.LoginAsync(extraParameters: extraParameters);
 
             if (loginResult.IsError)
             {
@@ -69,13 +87,12 @@ namespace ElectricVehicleManagement.Presenetation
             string email = loginResult.User.FindFirst(c => c.Type == "email")?.Value ?? "No email";
             string avatar = loginResult.User.FindFirst(c => c.Type == "picture")?.Value;
             string fullName = loginResult.User.FindFirst(c => c.Type == "name")?.Value;
-            await _userService.GetOrAddUser(email, null, fullName!, null);
-            
+            var currentUser = await _userService.GetOrAddUser(email, null, fullName!, null);
+    
+            App.CurrentUser = currentUser!;   
             ShowHeaderAfterLogin(email, avatar);
         }
-
-
-
+        
         private void ShowHeaderAfterLogin(string email, string avatarUrl)
         {
             loginButton.Visibility = Visibility.Collapsed;
@@ -104,25 +121,28 @@ namespace ElectricVehicleManagement.Presenetation
         {
             loginButton.Visibility = Visibility.Visible;
             connectionNameComboBox.Visibility = Visibility.Visible;
-
             avatarImage.Visibility = Visibility.Collapsed;
             emailTextBlock.Visibility = Visibility.Collapsed;
-
             logoutButton.Visibility = Visibility.Collapsed;
         }
 
         private async void logoutButton_Click(object sender, RoutedEventArgs e)
         {
-            if (client != null)
+            if (_client != null)
             {
-                var result = await client.LogoutAsync();
+                var result = await _client.LogoutAsync();
                 if (result != BrowserResultType.Success)
                 {
                     MessageBox.Show("Logout failed", "Auth0 Logout", MessageBoxButton.OK, MessageBoxImage.Error);
                     return;
                 }
+                
             }
+            App.CurrentUser = null;
+            
             ResetHeaderAfterLogout();
+            MessageBox.Show("Logged out successfully");
         }
+
     }
 }

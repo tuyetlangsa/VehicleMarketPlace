@@ -19,9 +19,7 @@ public class ListingImageConfiguration : IEntityTypeConfiguration<ListingImage>
         builder.Property(li => li.IsPrimary)
             .IsRequired()
             .HasDefaultValue(false);
-
-
-
+        
         builder.Property(li => li.UploadedAt)
                 .HasColumnType("timestamptz")
             .IsRequired();
