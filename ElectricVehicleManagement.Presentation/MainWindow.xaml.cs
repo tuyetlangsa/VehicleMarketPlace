@@ -27,7 +27,6 @@ namespace ElectricVehicleManagement.Presentation
     /// </summary>
     public partial class MainWindow : Window
     {
-        private string _selectedFilePath;
         private Auth0Client _client;
         private readonly ICloudinaryService _cloudinaryService;
         private readonly IUserService _userService;
