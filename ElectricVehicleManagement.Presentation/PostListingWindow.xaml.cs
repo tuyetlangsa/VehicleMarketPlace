@@ -16,7 +16,7 @@ namespace ElectricVehicleManagement.Presentation
         private readonly IListingService _listingService;
         private readonly ICloudinaryService _cloudinaryService;
 
-        // danh sách đường dẫn file ảnh chọn từ máy
+   
         private readonly List<string> _selectedImagePaths = new();
 
         public PostListingWindow(
@@ -30,9 +30,6 @@ namespace ElectricVehicleManagement.Presentation
             InitEnumCombos();
         }
 
-        /// <summary>
-        /// Đổ dữ liệu enums vào ComboBox
-        /// </summary>
         private void InitEnumCombos()
         {
             BodyTypeComboBox.ItemsSource = Enum.GetValues(typeof(BodyType));
@@ -49,9 +46,6 @@ namespace ElectricVehicleManagement.Presentation
                 TransmissionComboBox.SelectedIndex = 0;
         }
 
-        /// <summary>
-        /// Chọn 3–10 ảnh
-        /// </summary>
         private void SelectImageButton_Click(object sender, RoutedEventArgs e)
         {
             var dialog = new OpenFileDialog
@@ -100,9 +94,6 @@ namespace ElectricVehicleManagement.Presentation
             Close();
         }
 
-        /// <summary>
-        /// Click Post listing: validate + upload Cloudinary + lưu DB
-        /// </summary>
         private async void PostButton_Click(object sender, RoutedEventArgs e)
         {
             var currentUser = App.CurrentUser as User;
@@ -118,7 +109,7 @@ namespace ElectricVehicleManagement.Presentation
 
             if (!TryBuildBaseListing(currentUser, out var listing))
             {
-                // đã show lỗi
+         
                 return;
             }
 
@@ -127,7 +118,6 @@ namespace ElectricVehicleManagement.Presentation
                 var now = DateTime.UtcNow;
                 var uploadedUrls = new List<string>();
 
-                // Upload ảnh lên Cloudinary
                 foreach (var path in _selectedImagePaths)
                 {
                     var url = await _cloudinaryService.UploadFileAsync(path);
@@ -144,7 +134,7 @@ namespace ElectricVehicleManagement.Presentation
                     uploadedUrls.Add(url);
                 }
 
-                // Tạo ListingImage từ URL
+      
                 for (int i = 0; i < uploadedUrls.Count; i++)
                 {
                     listing.Images.Add(new ListingImage
@@ -152,13 +142,13 @@ namespace ElectricVehicleManagement.Presentation
                         Id = Guid.NewGuid(),
                         ListingId = listing.ListingId,
                         ImageUrl = uploadedUrls[i],
-                        IsPrimary = i == 0, // ảnh đầu tiên là primary
+                        IsPrimary = i == 0, 
                         UploadedAt = now
                     });
                 }
 
-                // Gọi service lưu DB
-                await _listingService.CreateListing(listing); // hoặc CreateListingAsync nếu bạn đặt tên như vậy
+          
+                await _listingService.CreateListing(listing);  
 
                 MessageBox.Show(
                     "Listing posted successfully.",
@@ -179,15 +169,13 @@ namespace ElectricVehicleManagement.Presentation
             }
         }
 
-        /// <summary>
-        /// Validate form (text + số + enum + số lượng ảnh) và build Listing (chưa có Images)
-        /// </summary>
+       
         private bool TryBuildBaseListing(User currentUser, out Listing listing)
         {
             listing = null!;
             var errors = new List<string>();
 
-            // 1. Required text
+      
             string title = TitleTextBox.Text.Trim();
             if (string.IsNullOrWhiteSpace(title))
                 errors.Add("Title is required.");
@@ -204,21 +192,20 @@ namespace ElectricVehicleManagement.Presentation
             if (string.IsNullOrWhiteSpace(model))
                 errors.Add("Model is required.");
 
-            // 2. Price
+   
             if (!decimal.TryParse(PriceTextBox.Text.Trim(), out var price) || price <= 0)
                 errors.Add("Price must be a positive number.");
 
-            // 3. Year
             var currentYear = DateTime.UtcNow.Year;
             if (!int.TryParse(YearTextBox.Text.Trim(), out var year) ||
                 year < 1900 || year > currentYear)
                 errors.Add($"Manufacturing year must be between 1900 and {currentYear}.");
 
-            // 4. Seats
+     
             if (!int.TryParse(SeatingTextBox.Text.Trim(), out var seats) || seats <= 0)
                 errors.Add("Seats must be a positive integer.");
 
-            // 5. Mileage (optional)
+      
             int? mileage = null;
             if (!string.IsNullOrWhiteSpace(MileageTextBox.Text))
             {
@@ -228,7 +215,6 @@ namespace ElectricVehicleManagement.Presentation
                     mileage = mileageValue;
             }
 
-            // 6. Battery capacity (optional)
             int? batteryCapacity = null;
             if (!string.IsNullOrWhiteSpace(BatteryCapTextBox.Text))
             {
@@ -238,7 +224,7 @@ namespace ElectricVehicleManagement.Presentation
                     batteryCapacity = batteryCapValue;
             }
 
-            // 7. Battery health (optional)
+ 
             decimal? batteryHealth = null;
             if (!string.IsNullOrWhiteSpace(BatteryCondTextBox.Text))
             {
@@ -249,7 +235,7 @@ namespace ElectricVehicleManagement.Presentation
                     batteryHealth = health;
             }
 
-            // 8. Enums từ ComboBox
+
             BodyType bodyType = default;
             if (BodyTypeComboBox.SelectedItem is BodyType bt)
             {
@@ -280,7 +266,6 @@ namespace ElectricVehicleManagement.Presentation
                 errors.Add("Please choose transmission type.");
             }
 
-            // 9. Images count
             if (_selectedImagePaths.Count < 3 || _selectedImagePaths.Count > 10)
                 errors.Add("Please select between 3 and 10 images.");
 
