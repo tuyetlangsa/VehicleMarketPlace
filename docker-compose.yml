@@ -6,6 +6,8 @@
       - POSTGRES_DB=vehicle
       - POSTGRES_USER=postgres
       - POSTGRES_PASSWORD=postgres
+      - TZ=Asia/Ho_Chi_Minh
+      - PGTZ=Asia/Ho_Chi_Minh
     volumes:
       - pg_data:/var/lib/postgresql/data
     ports:
