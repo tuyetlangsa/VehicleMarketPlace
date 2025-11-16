@@ -35,7 +35,7 @@ namespace ElectricVehicleManagement.Presentation
         readonly string[] _connectionNames = new string[]
         {
             "Username-Password-Authentication",
-            "google-oauth2"        
+            "google-oauth2"
         };
 
         public MainWindow(IUserService userService, ICloudinaryService cloudinaryService, IListingService listingService)
@@ -52,11 +52,11 @@ namespace ElectricVehicleManagement.Presentation
             connectionNameComboBox.SelectedIndex = 0;
             LoadListings();
         }
-        
-        
+
+
         private async void LoadListings()
         {
-            var listings = await  _listingService.GetListings();
+            var listings = await _listingService.GetListings();
             ListingsItemsControl.ItemsSource = listings;
         }
         private async void LoginButton_OnClick(object sender, RoutedEventArgs e)
@@ -88,11 +88,11 @@ namespace ElectricVehicleManagement.Presentation
             string avatar = loginResult.User.FindFirst(c => c.Type == "picture")?.Value;
             string fullName = loginResult.User.FindFirst(c => c.Type == "name")?.Value;
             var currentUser = await _userService.GetOrAddUser(email, null, fullName!, null);
-    
-            App.CurrentUser = currentUser!;   
+
+            App.CurrentUser = currentUser!;
             ShowHeaderAfterLogin(email, avatar);
         }
-        
+
         private void ShowHeaderAfterLogin(string email, string avatarUrl)
         {
             loginButton.Visibility = Visibility.Collapsed;
@@ -115,6 +115,7 @@ namespace ElectricVehicleManagement.Presentation
             }
 
             logoutButton.Visibility = Visibility.Visible;
+            postListingButton.Visibility = Visibility.Visible;
         }
 
         private void ResetHeaderAfterLogout()
@@ -124,6 +125,7 @@ namespace ElectricVehicleManagement.Presentation
             avatarImage.Visibility = Visibility.Collapsed;
             emailTextBlock.Visibility = Visibility.Collapsed;
             logoutButton.Visibility = Visibility.Collapsed;
+            postListingButton.Visibility = Visibility.Collapsed;
         }
 
         private async void logoutButton_Click(object sender, RoutedEventArgs e)
@@ -136,12 +138,36 @@ namespace ElectricVehicleManagement.Presentation
                     MessageBox.Show("Logout failed", "Auth0 Logout", MessageBoxButton.OK, MessageBoxImage.Error);
                     return;
                 }
-                
+
             }
             App.CurrentUser = null;
-            
+
             ResetHeaderAfterLogout();
             MessageBox.Show("Logged out successfully");
+        }
+
+
+        private async void postListingButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (App.CurrentUser == null)
+            {
+                MessageBox.Show("Please login before posting a listing.",
+                                "Not authenticated",
+                                MessageBoxButton.OK,
+                                MessageBoxImage.Warning);
+                return;
+            }
+
+            var postWindow = new PostListingWindow(_listingService, _cloudinaryService)
+            {
+                Owner = this
+            };
+
+            // Nếu PostListingWindow trả DialogResult = true thì reload
+            if (postWindow.ShowDialog() == true)
+            {
+                LoadListings();
+            }
         }
 
     }
