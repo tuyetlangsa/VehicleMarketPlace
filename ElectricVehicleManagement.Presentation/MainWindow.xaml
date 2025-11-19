@@ -150,7 +150,8 @@
                 Background="White"
                 BorderBrush="#FFBDC3C7"
                 BorderThickness="1"
-                Text="Search listings..." />
+                Text="Search listings..."
+                x:Name="SearchBox"/>
             <Button Content="Search"
                 Width="100"
                 Height="35"
@@ -159,9 +160,41 @@
                 Foreground="White"
                 FontWeight="Bold"
                 BorderThickness="0"
-                Cursor="Hand" />
+                Cursor="Hand" 
+                Click="ButtonBase_OnClick"/>
         </StackPanel>
 
+        <StackPanel Orientation="Horizontal" DockPanel.Dock="Top"
+                    Margin="20,0,20,10"
+                    HorizontalAlignment="Center">
+
+            <!-- Transmission -->
+            <TextBlock Text="Transmission:"
+                       Width="150"
+                       VerticalAlignment="Center"/>
+            <ComboBox x:Name="TransmissionComboBox"
+                      Width="160"
+                      Height="32" SelectionChanged="TransmissionComboBox_OnSelectionChanged"/>
+
+            <!-- Body Type -->
+            <TextBlock Text="Body type:"
+                       Width="120"
+                       Margin="30,0,0,0"
+                       VerticalAlignment="Center"/>
+            <ComboBox x:Name="BodyTypeComboBox"
+                      Width="160"
+                      Height="32" SelectionChanged="BodyTypeComboBox_OnSelectionChanged" />
+
+            <!-- Energy -->
+            <TextBlock Text="Energy:"
+                       Width="100"
+                       Margin="30,0,0,0"
+                       VerticalAlignment="Center"/>
+            <ComboBox x:Name="EnergyComboBox"
+                      Width="160"
+                      Height="32" SelectionChanged="EnergyComboBox_OnSelectionChanged" />
+        </StackPanel>
+        
         <!-- Listings Grid -->
         <ScrollViewer VerticalScrollBarVisibility="Auto"
             Margin="10,0,10,10">
@@ -186,7 +219,9 @@
                             Background="#FFD0F8E0"
                             Effect="{DynamicResource DropShadowEffect}"
                             HorizontalAlignment="Stretch"
-                            VerticalAlignment="Stretch">
+                            VerticalAlignment="Stretch"
+                            MouseLeftButtonUp="UIElement_OnMouseLeftButtonUp"
+                            Cursor="Hand">
                             <StackPanel>
                                 <Image Height="300"
                                     Stretch="UniformToFill"

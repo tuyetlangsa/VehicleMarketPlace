@@ -1,0 +1,92 @@
+<Window x:Class="ElectricVehicleManagement.Presentation.ListingDetailWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Listing Details" Height="900"
+        Width="1200"
+        FontFamily="Tahoma"
+        FontSize="18"
+        Background="#FFA7F3D0" WindowStartupLocation="CenterScreen" Loaded="ListingDetailWindow_OnLoaded">
+    <Grid Margin="15">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="2*"/>
+            <ColumnDefinition Width="3*"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- LEFT: Image gallery -->
+        <StackPanel Grid.Column="0" Margin="0,0,15,0">
+            <Border CornerRadius="10" BorderBrush="#DDD" BorderThickness="1" Background="#FFF">
+                <Image Name="MainImage" Stretch="Uniform" Height="280"/>
+            </Border>
+
+            <ItemsControl Name="ThumbnailList" Margin="0,10,0,0">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <WrapPanel Orientation="Horizontal"/>
+                    </ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Border Margin="4" BorderThickness="1" BorderBrush="#CCC" CornerRadius="5">
+                            <Image Source="{Binding ImageUrl}" Width="80" Height="60" Stretch="UniformToFill" Cursor="Hand" MouseLeftButtonUp="Thumbnail_OnMouseLeftButtonUp"/>
+                        </Border>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </StackPanel>
+
+        <!-- RIGHT: Details -->
+        <ScrollViewer Grid.Column="1" Margin="0" VerticalScrollBarVisibility="Auto">
+            <StackPanel>
+                <TextBlock Text="{Binding Title}" FontSize="26" FontWeight="Bold" Margin="0,0,0,5"/>
+                <TextBlock Text="{Binding Price, StringFormat='Price: {0:C}'}" FontSize="18" FontWeight="SemiBold" Margin="0,0,0,15"/>
+
+                <!-- Approve / Reject buttons -->
+                <StackPanel Orientation="Horizontal" Margin="0,10,0,20">
+                    <Button Content="Approve"
+                            Width="120"
+                            Height="40"
+                            Background="#4CAF50"
+                            Foreground="White"
+                            FontWeight="Bold"
+                            Margin="0,0,10,0"
+                            x:Name="ApproveButton"
+                            Click="ButtonApprove_OnClick"/>
+
+                    <Button Content="Reject"
+                            Width="120"
+                            Height="40"
+                            Background="#F44336"
+                            Foreground="White"
+                            FontWeight="Bold"
+                            x:Name="RejectButton"
+                            Click="ButtonReject_OnClick"/>
+                </StackPanel>
+                <StackPanel Margin="0,5,0,15">
+                    <TextBlock Text="Vehicle Information" FontSize="20" FontWeight="Bold" Margin="0,10,0,5"/>
+
+                    <UniformGrid Columns="2" Rows="6" Margin="0,5,0,0" HorizontalAlignment="Stretch">
+                        <TextBlock Text="Brand:" Margin="0,2"/><TextBlock Text="{Binding VehicleBrand}" Margin="0,2"/>
+                        <TextBlock Text="Model:" Margin="0,2"/><TextBlock Text="{Binding VehicleModel}" Margin="0,2"/>
+                        <TextBlock Text="Year:" Margin="0,2"/><TextBlock Text="{Binding ManufacturingYear}" Margin="0,2"/>
+                        <TextBlock Text="Transmission:" Margin="0,2"/><TextBlock Text="{Binding TransmissionType}" Margin="0,2"/>
+                        <TextBlock Text="Body Type:" Margin="0,2"/><TextBlock Text="{Binding BodyType}" Margin="0,2"/>
+                        <TextBlock Text="Seats:" Margin="0,2"/><TextBlock Text="{Binding SeatingCapacity}" Margin="0,2"/>
+                        <TextBlock Text="Energy:" Margin="0,2"/><TextBlock Text="{Binding Energy}" Margin="0,2"/>
+                        <TextBlock Text="Battery (kWh):" Margin="0,2"/><TextBlock Text="{Binding BatteryCapacityKwh}" Margin="0,2"/>
+                        <TextBlock Text="Battery Condition (%):" Margin="0,2"/><TextBlock Text="{Binding BatteryConditionPercent}" Margin="0,2"/>
+                        <TextBlock Text="Mileage (km):" Margin="0,2"/><TextBlock Text="{Binding MileageKm}" Margin="0,2"/>
+                        <TextBlock Text="Location:" Margin="0,2"/><TextBlock Text="{Binding Location}" Margin="0,2"/>
+                    </UniformGrid>
+                </StackPanel>
+
+                <StackPanel Margin="0,100,0,0">
+                    <TextBlock Text="Description" FontSize="20" FontWeight="Bold" Margin="0,10,0,5"/>
+                    <Border Background="#FFF" BorderBrush="#CCC" BorderThickness="1" CornerRadius="5" Padding="10">
+                        <TextBlock Text="{Binding Description}" TextWrapping="Wrap"/>
+                    </Border>
+                </StackPanel>
+
+            </StackPanel>
+        </ScrollViewer>
+    </Grid>
+</Window>

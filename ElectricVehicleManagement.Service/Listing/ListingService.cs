@@ -14,10 +14,33 @@ public class ListingService(IDbContext dbContext) : IListingService
         await dbContext.SaveChangesAsync();
     }
 
+
+    public async Task<List<Data.Models.Listing>> SearchListings(string query)
+    {
+        return await dbContext.Listings
+            .Where(l =>
+                EF.Functions.ToTsVector("english",
+                        l.Title + " " +
+                        l.Description + " " +
+                        l.VehicleBrand + " " +
+                        l.VehicleModel + " " +
+                        l.Location + " " +
+                        l.SeatingCapacity + " " +
+                        l.Energy + " " +
+                        l.BodyType + " " +
+                        l.ManufacturingYear + " " +
+                        l.TransmissionType
+                    )
+                    .Matches(query)
+            )
+            .ToListAsync();
+    }
+
     public async Task<List<Data.Models.Listing>> GetListings()
     {
         return await dbContext.Listings
             .Include(l => l.Images)
+            .Where(l => l.Status == ListingStatus.Approved)
             .ToListAsync();
     }
 
@@ -178,5 +201,34 @@ public class ListingService(IDbContext dbContext) : IListingService
         await dbContext.SaveChangesAsync();
     }
 
-    
+    public async Task<List<Data.Models.Listing>> GetPendingListings()
+    {
+        return await dbContext.Listings
+            .Include(l => l.Images)
+            .Where(l => l.Status == ListingStatus.Pending)
+            .OrderBy(l => l.CreatedAt)
+            .ToListAsync();
+    }
+
+    public async Task<bool> ApproveListing(Guid listingId)
+    {
+        var listing = await dbContext.Listings.FirstOrDefaultAsync(l => l.ListingId == listingId);
+        if (listing == null) return false;
+        if (listing.Status != ListingStatus.Approved)
+        {
+            listing.Status = ListingStatus.Approved;
+        }
+        return await dbContext.SaveChangesAsync() > 0;
+    }
+
+    public async Task<bool> RejectListing(Guid listingId)
+    {
+        var listing = await dbContext.Listings.FirstOrDefaultAsync(l => l.ListingId == listingId);
+        if (listing == null) return false;
+        if (listing.Status != ListingStatus.Reject)
+        {
+            listing.Status = ListingStatus.Reject;
+        }
+        return await dbContext.SaveChangesAsync() > 0;
+    }
 }

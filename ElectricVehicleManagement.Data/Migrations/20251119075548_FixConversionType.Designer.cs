@@ -3,6 +3,7 @@ using System;
 using ElectricVehicleManagement.Data.Implementation;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,11 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace ElectricVehicleManagement.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251119075548_FixConversionType")]
+    partial class FixConversionType
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -126,11 +129,6 @@ namespace ElectricVehicleManagement.Data.Migrations
                     b.HasKey("ListingId");
 
                     b.HasIndex("UserId");
-
-                    b.HasIndex("Title", "Description", "VehicleBrand", "VehicleModel", "Location", "SeatingCapacity", "Energy", "BodyType", "ManufacturingYear", "TransmissionType")
-                        .HasAnnotation("Npgsql:TsVectorConfig", "english");
-
-                    NpgsqlIndexBuilderExtensions.HasMethod(b.HasIndex("Title", "Description", "VehicleBrand", "VehicleModel", "Location", "SeatingCapacity", "Energy", "BodyType", "ManufacturingYear", "TransmissionType"), "GIN");
 
                     b.ToTable("Listings", "public");
                 });
