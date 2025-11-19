@@ -16,6 +16,27 @@ public class ListingService(IDbContext dbContext) : IListingService
         return await dbContext.Listings.FindAsync(id);
     }
 
+    public async Task<List<Data.Models.Listing>> SearchListings(string query)
+    {
+        return await dbContext.Listings
+            .Where(l =>
+                EF.Functions.ToTsVector("english",
+                        l.Title + " " +
+                        l.Description + " " +
+                        l.VehicleBrand + " " +
+                        l.VehicleModel + " " +
+                        l.Location + " " +
+                        l.SeatingCapacity + " " +
+                        l.Energy + " " +
+                        l.BodyType + " " +
+                        l.ManufacturingYear + " " +
+                        l.TransmissionType
+                    )
+                    .Matches(query)
+            )
+            .ToListAsync();
+    }
+
     public async Task<List<Data.Models.Listing>> GetListings()
     {
         return await dbContext.Listings

@@ -21,7 +21,7 @@ namespace ElectricVehicleManagement.Data.Implementation.Configuration
 
             builder.Property(u => u.Phone).HasMaxLength(20);
             builder.Property(u => u.Address).HasMaxLength(500);
-            builder.Property(u => u.Role).HasConversion<byte>()
+            builder.Property(u => u.Role).HasConversion<string>()
                 .IsRequired();
             builder.Property(u => u.Status).HasDefaultValue(true);
             builder.Property(u => u.FullName)

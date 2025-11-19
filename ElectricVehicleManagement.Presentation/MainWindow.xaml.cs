@@ -14,6 +14,7 @@ using Duende.IdentityModel.OidcClient.Browser;
 using Duende.IdentityModel.OidcClient;
 using System.Configuration;
 using ElectricVehicleManagement.Data.Models;
+using ElectricVehicleManagement.Data.Models.Enums;
 using ElectricVehicleManagement.Service.Cloudinary;
 using ElectricVehicleManagement.Service.Listing;
 using ElectricVehicleManagement.Service.User;
@@ -32,7 +33,8 @@ namespace ElectricVehicleManagement.Presentation
         private readonly ICloudinaryService _cloudinaryService;
         private readonly IUserService _userService;
         private readonly IListingService _listingService;
-
+        private List<Listing> AllListings = new List<Listing>();
+        private List<Listing> FilteredListings = new List<Listing>();
         readonly string[] _connectionNames = new string[]
         {
             "Username-Password-Authentication",
@@ -51,6 +53,7 @@ namespace ElectricVehicleManagement.Presentation
         {
             connectionNameComboBox.ItemsSource = _connectionNames;
             connectionNameComboBox.SelectedIndex = 0;
+            InitEnumCombos();
             LoadListings();
         }
 
@@ -58,7 +61,8 @@ namespace ElectricVehicleManagement.Presentation
         private async void LoadListings()
         {
             var listings = await _listingService.GetListings();
-            ListingsItemsControl.ItemsSource = listings;
+            AllListings = listings.ToList(); // Lưu danh sách gốc
+            ListingsItemsControl.ItemsSource = AllListings;
         }
         private async void LoginButton_OnClick(object sender, RoutedEventArgs e)
         {
@@ -129,6 +133,22 @@ namespace ElectricVehicleManagement.Presentation
             postListingButton.Visibility = Visibility.Collapsed;
         }
 
+        private void InitEnumCombos()
+        {
+            BodyTypeComboBox.ItemsSource = Enum.GetValues(typeof(BodyType));
+            EnergyComboBox.ItemsSource = Enum.GetValues(typeof(Energy));
+            TransmissionComboBox.ItemsSource = Enum.GetValues(typeof(TransmissionType));
+
+            if (BodyTypeComboBox.Items.Count > 0)
+                BodyTypeComboBox.SelectedIndex = -1;
+
+            if (EnergyComboBox.Items.Count > 0)
+                EnergyComboBox.SelectedIndex = -1;
+
+            if (TransmissionComboBox.Items.Count > 0)
+                TransmissionComboBox.SelectedIndex = -1;
+        }
+        
         private async void logoutButton_Click(object sender, RoutedEventArgs e)
         {
             if (_client != null)
@@ -179,6 +199,54 @@ namespace ElectricVehicleManagement.Presentation
                 detailWindow.Listing = listing;
                 detailWindow.Show();
             }
+        }
+
+        private async void ButtonBase_OnClick(object sender, RoutedEventArgs e)
+        {
+            var query = SearchBox.Text;
+            if (string.IsNullOrWhiteSpace(query))
+            {
+                LoadListings(); 
+                MessageBox.Show("Please enter a search query", "Search Query", MessageBoxButton.OK, MessageBoxImage.Error);
+                return;
+            }
+            
+            var result = await _listingService.SearchListings(query);
+            ListingsItemsControl.ItemsSource = result;
+        }
+
+        private void TransmissionComboBox_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            ApplyFilters();
+        }
+        
+        
+        private void ApplyFilters()
+        {
+            var selectedTransmission = TransmissionComboBox.SelectedItem as TransmissionType?;
+            var selectedBodyType = BodyTypeComboBox.SelectedItem as BodyType?;
+            var selectedEnergy = EnergyComboBox.SelectedItem as Energy?;
+
+            var filtered = AllListings.Where(l =>
+                (!selectedTransmission.HasValue || l.TransmissionType == selectedTransmission.Value) &&
+                (!selectedBodyType.HasValue || l.BodyType == selectedBodyType.Value) &&
+                (!selectedEnergy.HasValue || l.Energy == selectedEnergy.Value)
+            ).ToList();
+
+            // Phải gán lại ItemsSource hoàn toàn
+            ListingsItemsControl.ItemsSource = filtered;
+        }
+
+        private void BodyTypeComboBox_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            ApplyFilters();
+
+        }
+        
+
+        private void EnergyComboBox_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+        {
+            ApplyFilters();
         }
     }
 }

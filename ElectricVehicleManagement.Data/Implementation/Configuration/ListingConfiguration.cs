@@ -47,9 +47,27 @@ public class ListingConfiguration : IEntityTypeConfiguration<Listing>
         builder.Property(v => v.UpdatedAt)
             .HasColumnType("timestamptz");
         builder.Property(v => v.IsVisible).HasDefaultValue(false);
-        builder.Property(v => v.Status).HasConversion<byte>();
-        builder.Property(v => v.BodyType).HasConversion<byte>();
-        builder.Property(v => v.TransmissionType).HasConversion<byte>();
-        builder.Property(v => v.Energy).HasConversion<byte>();
+        builder.Property(v => v.Status).HasConversion<string>();
+        builder.Property(v => v.BodyType).HasConversion<string>();
+        builder.Property(v => v.TransmissionType).HasConversion<string>();
+        builder.Property(v => v.Energy).HasConversion<string>();
+        builder
+            .HasIndex(l => new
+            {
+                l.Title,
+                l.Description,
+                l.VehicleBrand,
+                l.VehicleModel,
+                l.Location,
+                l.SeatingCapacity,
+                l.Energy,
+                l.BodyType,
+                l.ManufacturingYear, 
+                l.TransmissionType
+            })
+            .HasMethod("GIN")
+            .IsTsVectorExpressionIndex(
+                "english"
+            );
     }
 }
