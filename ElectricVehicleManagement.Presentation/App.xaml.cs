@@ -20,9 +20,9 @@ namespace ElectricVehicleManagement.Presentation
     /// </summary>
     public partial class App : Application
     {
-        public static User CurrentUser { get; set; }
-        public static IConfiguration Configuration { get; set; }
-        public static IServiceProvider ServiceProvider { get; private set; }
+        public static User CurrentUser { get; set; } = null!;
+        public static IConfiguration Configuration { get; set; } = null!;
+        public static IServiceProvider ServiceProvider { get; private set; } = null!;
 
         protected override void OnStartup(StartupEventArgs e)
         {
@@ -71,6 +71,8 @@ namespace ElectricVehicleManagement.Presentation
             services.AddTransient<IUserService, UserService>();
             services.AddTransient<IListingService, ListingService>();
             services.AddTransient<MainWindow>();
+            services.AddTransient<ListingDetailWindow>();
+
         }
     }
 }

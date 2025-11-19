@@ -5,5 +5,7 @@ public interface IListingService
     public Task<List<Data.Models.Listing>> GetListings();
 
     public Task CreateListing(Data.Models.Listing listing);
+    
+    public Task<Data.Models.Listing?> GetListingById(Guid id);
 
 }

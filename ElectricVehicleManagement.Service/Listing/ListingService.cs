@@ -11,6 +11,11 @@ public class ListingService(IDbContext dbContext) : IListingService
         await dbContext.SaveChangesAsync();
     }
 
+    public async Task<Data.Models.Listing?> GetListingById(Guid id)
+    {
+        return await dbContext.Listings.FindAsync(id);
+    }
+
     public async Task<List<Data.Models.Listing>> GetListings()
     {
         return await dbContext.Listings

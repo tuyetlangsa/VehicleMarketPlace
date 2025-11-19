@@ -17,6 +17,7 @@ using ElectricVehicleManagement.Data.Models;
 using ElectricVehicleManagement.Service.Cloudinary;
 using ElectricVehicleManagement.Service.Listing;
 using ElectricVehicleManagement.Service.User;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Identity.Client;
 using Microsoft.Win32;
 
@@ -170,5 +171,14 @@ namespace ElectricVehicleManagement.Presentation
             }
         }
 
+        private void UIElement_OnMouseLeftButtonUp(object sender, MouseButtonEventArgs e)
+        {
+            if (sender is Border border && border.DataContext is Listing listing)
+            {
+                var detailWindow = App.ServiceProvider.GetRequiredService<ListingDetailWindow>();
+                detailWindow.Listing = listing;
+                detailWindow.Show();
+            }
+        }
     }
 }

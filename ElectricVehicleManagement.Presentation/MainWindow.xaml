@@ -170,7 +170,9 @@
                             Background="#FFD0F8E0"
                             Effect="{DynamicResource DropShadowEffect}"
                             HorizontalAlignment="Stretch"
-                            VerticalAlignment="Stretch">
+                            VerticalAlignment="Stretch"
+                            MouseLeftButtonUp="UIElement_OnMouseLeftButtonUp"
+                            Cursor="Hand">
                             <StackPanel>
                                 <Image Height="300"
                                     Stretch="UniformToFill"
