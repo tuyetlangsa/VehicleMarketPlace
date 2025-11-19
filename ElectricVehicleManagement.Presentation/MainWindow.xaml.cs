@@ -45,6 +45,29 @@ namespace ElectricVehicleManagement.Presentation
             _listingService = listingService;
             InitializeComponent();
         }
+        
+        private void manageListingButton_Click(object sender, RoutedEventArgs e)
+        {
+            if (App.CurrentUser == null)
+            {
+                MessageBox.Show("Please login before managing listings.",
+                    "Not authenticated",
+                    MessageBoxButton.OK,
+                    MessageBoxImage.Warning);
+                return;
+            }
+
+            var window = new ListingManagementWindow(
+                _listingService, 
+                _cloudinaryService,
+                App.CurrentUser!.Id            
+            );
+
+            window.Owner = this;
+            window.ShowDialog();
+
+            LoadListings();
+        }
 
         private void Window_Loaded(object sender, RoutedEventArgs e)
         {
@@ -116,6 +139,7 @@ namespace ElectricVehicleManagement.Presentation
 
             logoutButton.Visibility = Visibility.Visible;
             postListingButton.Visibility = Visibility.Visible;
+            manageListingButton.Visibility = Visibility.Visible;
         }
 
         private void ResetHeaderAfterLogout()
@@ -126,6 +150,7 @@ namespace ElectricVehicleManagement.Presentation
             emailTextBlock.Visibility = Visibility.Collapsed;
             logoutButton.Visibility = Visibility.Collapsed;
             postListingButton.Visibility = Visibility.Collapsed;
+            manageListingButton.Visibility =  Visibility.Collapsed;
         }
 
         private async void logoutButton_Click(object sender, RoutedEventArgs e)
