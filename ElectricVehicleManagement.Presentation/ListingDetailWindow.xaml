@@ -40,6 +40,27 @@
                 <TextBlock Text="{Binding Title}" FontSize="26" FontWeight="Bold" Margin="0,0,0,5"/>
                 <TextBlock Text="{Binding Price, StringFormat='Price: {0:C}'}" FontSize="18" FontWeight="SemiBold" Margin="0,0,0,15"/>
 
+                <!-- Approve / Reject buttons -->
+                <StackPanel Orientation="Horizontal" Margin="0,10,0,20">
+                    <Button Content="Approve"
+                            Width="120"
+                            Height="40"
+                            Background="#4CAF50"
+                            Foreground="White"
+                            FontWeight="Bold"
+                            Margin="0,0,10,0"
+                            x:Name="ApproveButton"
+                            Click="ButtonApprove_OnClick"/>
+
+                    <Button Content="Reject"
+                            Width="120"
+                            Height="40"
+                            Background="#F44336"
+                            Foreground="White"
+                            FontWeight="Bold"
+                            x:Name="RejectButton"
+                            Click="ButtonReject_OnClick"/>
+                </StackPanel>
                 <StackPanel Margin="0,5,0,15">
                     <TextBlock Text="Vehicle Information" FontSize="20" FontWeight="Bold" Margin="0,10,0,5"/>
 

@@ -24,6 +24,12 @@ public interface IListingService
     public Task<Data.Models.Listing> GetListingById(Guid id);
     
     public Task UpdateVisibility(Guid listingId, bool isVisible);
+    
+    public Task<List<Data.Models.Listing>> GetPendingListings();
+
+    public Task<bool> ApproveListing(Guid listingId);
+    
+    public Task<bool> RejectListing(Guid listingId);
 
 
 }

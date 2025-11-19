@@ -34,7 +34,6 @@ namespace ElectricVehicleManagement.Presentation
         private readonly IUserService _userService;
         private readonly IListingService _listingService;
         private List<Listing> AllListings = new List<Listing>();
-        private List<Listing> FilteredListings = new List<Listing>();
         readonly string[] _connectionNames = new string[]
         {
             "Username-Password-Authentication",
@@ -49,7 +48,7 @@ namespace ElectricVehicleManagement.Presentation
             InitializeComponent();
         }
         
-        private void manageListingButton_Click(object sender, RoutedEventArgs e)
+        private async void manageListingButton_Click(object sender, RoutedEventArgs e)
         {
             if (App.CurrentUser == null)
             {
@@ -69,19 +68,19 @@ namespace ElectricVehicleManagement.Presentation
             window.Owner = this;
             window.ShowDialog();
 
-            LoadListings();
+            await LoadListings();
         }
 
-        private void Window_Loaded(object sender, RoutedEventArgs e)
+        private async void Window_Loaded(object sender, RoutedEventArgs e)
         {
             connectionNameComboBox.ItemsSource = _connectionNames;
             connectionNameComboBox.SelectedIndex = 0;
             InitEnumCombos();
-            LoadListings();
+            await LoadListings();
         }
 
 
-        private async void LoadListings()
+        private async Task LoadListings()
         {
             var listings = await _listingService.GetListings();
             AllListings = listings.ToList(); // Lưu danh sách gốc
@@ -118,6 +117,13 @@ namespace ElectricVehicleManagement.Presentation
             var currentUser = await _userService.GetOrAddUser(email, null, fullName!, null);
 
             App.CurrentUser = currentUser!;
+            if (App.CurrentUser.Role == Role.Administrator)
+            {
+                var adminWindow = App.ServiceProvider.GetRequiredService<MainAdminWindow>();
+                adminWindow.Show();
+                this.Close();
+                return;
+            }
             ShowHeaderAfterLogin(email, avatar);
         }
 
@@ -212,7 +218,7 @@ namespace ElectricVehicleManagement.Presentation
             // Nếu PostListingWindow trả DialogResult = true thì reload
             if (postWindow.ShowDialog() == true)
             {
-                LoadListings();
+                await LoadListings();
             }
         }
 
@@ -231,7 +237,7 @@ namespace ElectricVehicleManagement.Presentation
             var query = SearchBox.Text;
             if (string.IsNullOrWhiteSpace(query))
             {
-                LoadListings(); 
+                await LoadListings(); 
                 MessageBox.Show("Please enter a search query", "Search Query", MessageBoxButton.OK, MessageBoxImage.Error);
                 return;
             }
