@@ -39,6 +39,7 @@ public class ListingService(IDbContext dbContext) : IListingService
     public async Task<List<Data.Models.Listing>> GetListings()
     {
         return await dbContext.Listings
+            .Include(l => l.User)
             .Include(l => l.Images)
             .Where(l => l.Status == ListingStatus.Approved)
             .ToListAsync();
@@ -217,6 +218,7 @@ public class ListingService(IDbContext dbContext) : IListingService
         if (listing.Status != ListingStatus.Approved)
         {
             listing.Status = ListingStatus.Approved;
+            listing.UpdatedAt = DateTime.UtcNow;
         }
         return await dbContext.SaveChangesAsync() > 0;
     }
@@ -228,7 +230,38 @@ public class ListingService(IDbContext dbContext) : IListingService
         if (listing.Status != ListingStatus.Reject)
         {
             listing.Status = ListingStatus.Reject;
+            listing.UpdatedAt = DateTime.UtcNow;
         }
         return await dbContext.SaveChangesAsync() > 0;
+    }
+
+    public async Task<List<Data.Models.Listing>> GetReviewedListings()
+    {
+        return await dbContext.Listings
+            .Include(l => l.Images)
+            .Where(l => l.Status != ListingStatus.Pending)
+            .OrderBy(l => l.CreatedAt)
+            .ToListAsync(); 
+    }
+
+    public async Task<List<Data.Models.Listing>> GetListingsByStatus(string status)
+    {
+        var historyListings =  dbContext.Listings
+            .Include(l => l.Images)
+            .Where(l => l.Status != ListingStatus.Pending);
+
+        switch (status)
+        {
+            case "Approved":
+                return await historyListings.Where(x => x.Status == ListingStatus.Approved).ToListAsync();
+            case "Rejected":
+                return await historyListings.Where(x => x.Status == ListingStatus.Reject).ToListAsync();
+            case "Sold":
+                return await historyListings.Where(x => x.Status == ListingStatus.Sold).ToListAsync();
+            case "All":
+                 return await historyListings.ToListAsync();
+            default:
+                return await historyListings.ToListAsync();
+        }
     }
 }

@@ -31,5 +31,8 @@ public interface IListingService
     
     public Task<bool> RejectListing(Guid listingId);
 
+    public Task<List<Data.Models.Listing>> GetReviewedListings();
+    
+    public Task<List<Data.Models.Listing>> GetListingsByStatus(string status);
 
 }

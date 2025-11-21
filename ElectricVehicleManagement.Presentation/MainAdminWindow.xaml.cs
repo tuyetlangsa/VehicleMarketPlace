@@ -20,6 +20,7 @@ public partial class MainAdminWindow : Window
     private async void MainAdminWindow_OnLoaded(object sender, RoutedEventArgs e)
     {
         await LoadPendingListings();
+        await LoadHistoryListings();
     }
     
     private async Task LoadPendingListings()
@@ -28,6 +29,11 @@ public partial class MainAdminWindow : Window
         PendingListingGrid.ItemsSource = pendingListings ;
     }
 
+    private async Task LoadHistoryListings()
+    {
+        var historyListings = await _listingService.GetReviewedListings();
+        HistoryListingGrid.ItemsSource = historyListings;
+    }
     private void ButtonBase_OnClick(object sender, RoutedEventArgs e)
     {
         var button = sender as Button;
@@ -40,5 +46,12 @@ public partial class MainAdminWindow : Window
         detailWindow.Listing = listing;
         detailWindow.OnListingUpdated += async () => await LoadPendingListings();
         detailWindow.Show();
+    }
+
+    private async void HistoryFilterCombo_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
+    {
+        var selected = (HistoryFilterCombo.SelectedItem as ComboBoxItem)?.Content?.ToString();
+        var filtered = await _listingService.GetListingsByStatus(selected);
+        HistoryListingGrid.ItemsSource = filtered;
     }
 }

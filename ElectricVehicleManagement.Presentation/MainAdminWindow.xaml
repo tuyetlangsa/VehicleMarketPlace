@@ -6,7 +6,7 @@
         Height="750"
         Width="1300"
         FontFamily="Tahoma"
-        FontSize="18" 
+        FontSize="18"
         Background="#FFA7F3D0"
         Loaded="MainAdminWindow_OnLoaded">
 
@@ -15,28 +15,28 @@
         <DropShadowEffect x:Key="SoftShadow"
                           ShadowDepth="2"
                           BlurRadius="10"
-                          Opacity="0.25"/>
+                          Opacity="0.25" />
 
         <Style TargetType="DataGridColumnHeader">
-            <Setter Property="Background" Value="#2C3E50"/>
-            <Setter Property="Foreground" Value="White"/>
-            <Setter Property="FontWeight" Value="SemiBold"/>
-            <Setter Property="Height" Value="42"/>
+            <Setter Property="Background" Value="#2C3E50" />
+            <Setter Property="Foreground" Value="White" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="Height" Value="42" />
         </Style>
 
         <Style TargetType="Button">
-            <Setter Property="Padding" Value="8 4"/>
-            <Setter Property="Cursor" Value="Hand"/>
-            <Setter Property="BorderThickness" Value="0"/>
-            <Setter Property="FontSize" Value="14"/>
-            <Setter Property="FontWeight" Value="Bold"/>
-            <Setter Property="Foreground" Value="White"/>
-            <Setter Property="Background" Value="#3498DB"/>
-            <Setter Property="Margin" Value="4 0"/>
-            <Setter Property="HorizontalAlignment" Value="Center"/>
-            <Setter Property="VerticalAlignment" Value="Center"/>
-            <Setter Property="BorderBrush" Value="Transparent"/>
-            <Setter Property="Effect" Value="{StaticResource SoftShadow}"/>
+            <Setter Property="Padding" Value="8 4" />
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="BorderThickness" Value="0" />
+            <Setter Property="FontSize" Value="14" />
+            <Setter Property="FontWeight" Value="Bold" />
+            <Setter Property="Foreground" Value="White" />
+            <Setter Property="Background" Value="#3498DB" />
+            <Setter Property="Margin" Value="4 0" />
+            <Setter Property="HorizontalAlignment" Value="Center" />
+            <Setter Property="VerticalAlignment" Value="Center" />
+            <Setter Property="BorderBrush" Value="Transparent" />
+            <Setter Property="Effect" Value="{StaticResource SoftShadow}" />
             <Setter Property="Template">
                 <Setter.Value>
                     <ControlTemplate TargetType="Button">
@@ -45,7 +45,7 @@
                                 Padding="{TemplateBinding Padding}"
                                 SnapsToDevicePixels="True">
                             <ContentPresenter HorizontalAlignment="Center"
-                                              VerticalAlignment="Center"/>
+                                              VerticalAlignment="Center" />
                         </Border>
                     </ControlTemplate>
                 </Setter.Value>
@@ -66,10 +66,9 @@
                            Foreground="White"
                            VerticalAlignment="Center"
                            FontSize="26"
-                           FontWeight="Bold"/>
+                           FontWeight="Bold" />
             </Grid>
         </Border>
-
 
 
         <Grid Margin="20">
@@ -114,13 +113,11 @@
 
                                     <DataGridTextColumn Header="Price"
                                                         Binding="{Binding Price}"
-                                                        Width="*"
-                                                        />
+                                                        Width="*" />
 
                                     <DataGridTextColumn Header="Created At"
                                                         Binding="{Binding CreatedAt}"
-                                                        Width="*"
-                                                         />
+                                                        Width="*" />
 
                                     <DataGridTemplateColumn Header="Action"
                                                             Width="120">
@@ -128,8 +125,7 @@
                                             <DataTemplate>
                                                 <Button Content="Details"
                                                         Background="#3498DB"
-                                                        Click="ButtonBase_OnClick"
-                                                         />
+                                                        Click="ButtonBase_OnClick" />
                                             </DataTemplate>
                                         </DataGridTemplateColumn.CellTemplate>
                                     </DataGridTemplateColumn>
@@ -142,15 +138,69 @@
 
 
                     <TabItem Header="Approval History">
-                        <Grid Background="White">
-                            <TextBlock Text="Approval history will be implemented later."
-                                       VerticalAlignment="Center"
-                                       HorizontalAlignment="Center"
-                                       FontSize="20"
-                                       Foreground="Gray"/>
-                        </Grid>
-                    </TabItem>
+                        <DockPanel Margin="10">
 
+                            <!-- FILTER BAR -->
+                            <StackPanel DockPanel.Dock="Top"
+                                        Orientation="Horizontal"
+                                        Margin="0 0 0 10">
+                                <TextBlock Text="Filter:"
+                                           VerticalAlignment="Center"
+                                           Margin="0 0 10 0"
+                                           FontWeight="Bold" />
+
+                                <ComboBox x:Name="HistoryFilterCombo"
+                                          Width="180"
+                                          SelectionChanged="HistoryFilterCombo_OnSelectionChanged">
+                                    <ComboBoxItem Content="All" IsSelected="True" />
+                                    <ComboBoxItem Content="Approved" />
+                                    <ComboBoxItem Content="Rejected" />
+                                    <ComboBoxItem Content="Sold" />
+                                </ComboBox>
+                            </StackPanel>
+
+                            <!-- DATA GRID -->
+                            <DataGrid x:Name="HistoryListingGrid"
+                                      AutoGenerateColumns="False"
+                                      CanUserAddRows="False"
+                                      IsReadOnly="True"
+                                      RowHeight="55"
+                                      ColumnHeaderHeight="40"
+                                      GridLinesVisibility="None"
+                                      Background="White"
+                                      BorderBrush="#D5D8DC"
+                                      BorderThickness="1"
+                                      Effect="{StaticResource SoftShadow}">
+
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Header="Title"
+                                                        Binding="{Binding Title}"
+                                                        Width="2*" />
+
+                                    <DataGridTextColumn Header="Brand"
+                                                        Binding="{Binding VehicleBrand}"
+                                                        Width="*" />
+
+                                    <DataGridTextColumn Header="Model"
+                                                        Binding="{Binding VehicleModel}"
+                                                        Width="*" />
+
+                                    <DataGridTextColumn Header="Price"
+                                                        Binding="{Binding Price}"
+                                                        Width="*" />
+
+                                    <DataGridTextColumn Header="Status"
+                                                        Binding="{Binding Status}"
+                                                        Width="*" />
+
+                                    <DataGridTextColumn Header="Reviewed At"
+                                                        Binding="{Binding UpdatedAt}"
+                                                        Width="*" />
+                                </DataGrid.Columns>
+                            </DataGrid>
+
+                        </DockPanel>
+                    </TabItem>
                 </TabControl>
             </Border>
         </Grid>
