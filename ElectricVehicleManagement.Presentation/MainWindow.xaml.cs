@@ -75,6 +75,7 @@ namespace ElectricVehicleManagement.Presentation
         {
             connectionNameComboBox.ItemsSource = _connectionNames;
             connectionNameComboBox.SelectedIndex = 0;
+           
             InitEnumCombos();
             await LoadListings();
         }
@@ -83,7 +84,7 @@ namespace ElectricVehicleManagement.Presentation
         private async Task LoadListings()
         {
             var listings = await _listingService.GetListings();
-            AllListings = listings.ToList(); // Lưu danh sách gốc
+            AllListings = listings.ToList(); 
             ListingsItemsControl.ItemsSource = AllListings;
         }
         private async void LoginButton_OnClick(object sender, RoutedEventArgs e)
@@ -117,11 +118,9 @@ namespace ElectricVehicleManagement.Presentation
             var currentUser = await _userService.GetOrAddUser(email, null, fullName!, null);
 
             App.CurrentUser = currentUser!;
-            if (App.CurrentUser.Role == Role.Administrator)
+            if (!App.CurrentUser.Status)
             {
-                var adminWindow = App.ServiceProvider.GetRequiredService<MainAdminWindow>();
-                adminWindow.Show();
-                this.Close();
+                MessageBox.Show("Your account is blocked !");
                 return;
             }
             ShowHeaderAfterLogin(email, avatar);
@@ -151,6 +150,14 @@ namespace ElectricVehicleManagement.Presentation
             logoutButton.Visibility = Visibility.Visible;
             postListingButton.Visibility = Visibility.Visible;
             manageListingButton.Visibility = Visibility.Visible;
+            viewProfileBtn.Visibility = Visibility.Visible;
+            
+            if (App.CurrentUser != null && App.CurrentUser.Role == Role.Administrator)
+            {   
+                manageListingButton.Visibility = Visibility.Collapsed;
+                viewProfileBtn.Visibility = Visibility.Collapsed;
+                adminDashBoard.Visibility =  Visibility.Visible;
+            }
         }
 
         private void ResetHeaderAfterLogout()
@@ -162,6 +169,8 @@ namespace ElectricVehicleManagement.Presentation
             logoutButton.Visibility = Visibility.Collapsed;
             postListingButton.Visibility = Visibility.Collapsed;
             manageListingButton.Visibility =  Visibility.Collapsed;
+            adminDashBoard.Visibility = Visibility.Collapsed;
+            viewProfileBtn.Visibility = Visibility.Collapsed;
         }
 
         private void InitEnumCombos()
@@ -278,6 +287,31 @@ namespace ElectricVehicleManagement.Presentation
         private void EnergyComboBox_OnSelectionChanged(object sender, SelectionChangedEventArgs e)
         {
             ApplyFilters();
+        }
+
+        private void AdminDashBoard_OnClick(object sender, RoutedEventArgs e)
+        {
+            if (App.CurrentUser.Role == Role.Administrator)
+            {
+                var adminWindow = App.ServiceProvider.GetRequiredService<MainAdminWindow>();
+                adminWindow.Show();
+                return;
+            }
+        }
+
+        private void ViewProfileBtn_OnClick(object sender, RoutedEventArgs e)
+        {
+            if (App.CurrentUser != null)
+            {
+                var profileWindow = new UserProfileWindow(App.CurrentUser.Id, _userService);
+                profileWindow.Show();
+            }
+            else
+            {
+                MessageBox.Show("You must be login to view profile !", "Warning", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+            
         }
     }
 }
