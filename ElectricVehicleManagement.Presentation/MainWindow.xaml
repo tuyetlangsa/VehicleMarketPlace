@@ -75,8 +75,33 @@
                             Cursor="Hand"
                             Click="manageListingButton_Click"/>
                     
+                    <Button x:Name="adminDashBoard"
+                            Content="DashBoard"
+                            Width="150"
+                            Height="30"
+                            Margin="0,0,10,0"
+                            Background="#FF2980B9"
+                            Foreground="White"
+                            FontWeight="Bold"
+                            BorderThickness="0"
+                            Visibility="Collapsed"
+                            Cursor="Hand"
+                            Click="AdminDashBoard_OnClick"/>
                     
-
+                    <Button x:Name="viewProfileBtn"
+                            Content="Profile"
+                            Width="150"
+                            Height="30"
+                            Margin="0,0,10,0"
+                            Background="#FF2980B9"
+                            Foreground="White"
+                            FontWeight="Bold"
+                            BorderThickness="0"
+                            Visibility="Collapsed"
+                            Cursor="Hand"
+                            Click="ViewProfileBtn_OnClick"/>
+                    
+                    
                     <!-- Separator -->
                     <Border Width="1"
                         Height="26"

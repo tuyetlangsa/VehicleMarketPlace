@@ -1,6 +1,7 @@
 <Window x:Class="ElectricVehicleManagement.Presentation.MainAdminWindow"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:converters="clr-namespace:ElectricVehicleManagement.Presentation.Converters"
         Title="Admin Dashboard"
         WindowStartupLocation="CenterScreen"
         Height="750"
@@ -51,6 +52,8 @@
                 </Setter.Value>
             </Setter>
         </Style>
+        
+        <converters:UserStatusConverter x:Key="UserStatusConverter"/>
 
     </Window.Resources>
 
@@ -69,6 +72,19 @@
                            FontWeight="Bold" />
             </Grid>
         </Border>
+        
+        <StackPanel Background="#34495E" Width="150" DockPanel.Dock="Left">
+
+            <Button Content="View Report"
+                    Height="40"
+                    Width="170"
+                    Margin="30"
+                    Background="#2ECC71"
+                    Foreground="White"
+                    FontWeight="Bold"
+                    x:Name="reportBtn_Click"
+                    Click="ReportBtn_Click_OnClick"/>
+        </StackPanel>
 
 
         <Grid Margin="20">
@@ -201,6 +217,127 @@
 
                         </DockPanel>
                     </TabItem>
+
+                    <TabItem Header="Manage Accounts">
+                        <Grid Margin="10">
+
+                            <!-- SEARCH BAR -->
+                            <StackPanel Orientation="Horizontal"
+                                        Margin="0,0,0,10"
+                                        VerticalAlignment="Top">
+
+                                <TextBox x:Name="SearchAccountBox"
+                                         Width="260"
+                                         Height="30"
+                                         Padding="5"
+                                         FontSize="16"
+                                         VerticalContentAlignment="Center" />
+
+                                <Button Content="Search"
+                                        Width="110"
+                                        Height="36"
+                                        Margin="10,0,0,0"
+                                        Click="SearchAccountBtn_OnClick"
+                                        Background="#2ECC71" />
+                            </StackPanel>
+
+                            <!-- ACCOUNT TABLE -->
+                            <DataGrid x:Name="AccountGrid"
+                                      AutoGenerateColumns="False"
+                                      CanUserAddRows="False"
+                                      IsReadOnly="True"
+                                      Margin="0,50,0,60"
+                                      RowHeight="55"
+                                      ColumnHeaderHeight="40"
+                                      GridLinesVisibility="None"
+                                      Background="White"
+                                      BorderBrush="#D5D8DC"
+                                      BorderThickness="1"
+                                      Effect="{StaticResource SoftShadow}">
+
+                                <DataGrid.Columns>
+
+                                    <DataGridTextColumn Visibility="Collapsed"
+                                                        Header="User ID"
+                                                        Binding="{Binding Id}" />
+
+                                    <DataGridTextColumn Header="Email"
+                                                        Binding="{Binding Email}"
+                                                        Width="*" />
+
+                                    <DataGridTextColumn Header="Phone"
+                                                        Binding="{Binding Phone}"
+                                                        Width="*" />
+
+                                    <DataGridTextColumn Header="FullName"
+                                                        Binding="{Binding FullName}"
+                                                        Width="*" />
+
+                                    <DataGridTextColumn Header="Address"
+                                                        Binding="{Binding Address}"
+                                                        Width="*" />
+
+                                    <DataGridTextColumn Header="Role"
+                                                        Binding="{Binding Role}"
+                                                        Width="*" />
+
+                                    <DataGridTextColumn Header="Status"
+                                                        Binding="{Binding Status}"
+                                                        Width="*" />
+                                    
+                                    <DataGridTemplateColumn Header="Action" Width="120">
+                                        <DataGridTemplateColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <Button Content="{Binding Status,
+                                              Converter={StaticResource UserStatusConverter},
+                                              ConverterParameter=text}"
+                                                        Background="{Binding Status,
+                                                 Converter={StaticResource UserStatusConverter},
+                                                 ConverterParameter=color}"
+                                                        Foreground="White"
+                                                        Padding="6,3"
+                                                        BorderThickness="0"
+                                                        Cursor="Hand"
+                                                        x:Name="BanUnlockBtn"
+                                                        Click="BanUnlockBtn_OnClick"/>
+                                            </DataTemplate>
+                                        </DataGridTemplateColumn.CellTemplate>
+                                    </DataGridTemplateColumn>
+
+                                </DataGrid.Columns>
+                            </DataGrid>
+
+                            <!-- PAGINATION BAR -->
+                            <StackPanel Orientation="Horizontal"
+                                        HorizontalAlignment="Center"
+                                        VerticalAlignment="Bottom"
+                                        Margin="0,10,0,0">
+
+                                <Button x:Name="PrevAccountBtn"
+                                        Content="⟵ Prev"
+                                        Width="90"
+                                        Height="36"
+                                        Click="PrevAccountBtn_OnClick"
+                                        Background="#34495E" />
+
+                                <TextBlock x:Name="AccountPageText"
+                                           Text="Page 1/1"
+                                           VerticalAlignment="Center"
+                                           FontSize="18"
+                                           Margin="20,0" />
+
+                                <Button x:Name="NextAccountBtn"
+                                        Content="Next ⟶"
+                                        Width="90"
+                                        Height="36"
+                                        Click="NextAccountBtn_OnClick"
+                                        Background="#34495E" />
+                            </StackPanel>
+
+                        </Grid>
+                    </TabItem>
+
+
                 </TabControl>
             </Border>
         </Grid>

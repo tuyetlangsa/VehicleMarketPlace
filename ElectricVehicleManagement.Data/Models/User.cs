@@ -12,6 +12,7 @@ public class User
     public Role Role { get; set; } 
     public bool Status { get; set; }
     
+    
     public ICollection<Listing> Listings { get; set; } = new List<Listing>();
     public ICollection<Favorite> Favorites { get; set; } = new List<Favorite>();
 

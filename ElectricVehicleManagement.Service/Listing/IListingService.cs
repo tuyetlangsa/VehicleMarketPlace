@@ -35,4 +35,5 @@ public interface IListingService
     
     public Task<List<Data.Models.Listing>> GetListingsByStatus(string status);
 
+    public Task<List<Data.Models.Listing>> GetAllListingsRaw();
 }

@@ -205,6 +205,7 @@ public class ListingService(IDbContext dbContext) : IListingService
     public async Task<List<Data.Models.Listing>> GetPendingListings()
     {
         return await dbContext.Listings
+            .AsNoTracking()
             .Include(l => l.Images)
             .Where(l => l.Status == ListingStatus.Pending)
             .OrderBy(l => l.CreatedAt)
@@ -238,6 +239,7 @@ public class ListingService(IDbContext dbContext) : IListingService
     public async Task<List<Data.Models.Listing>> GetReviewedListings()
     {
         return await dbContext.Listings
+            .AsNoTracking()
             .Include(l => l.Images)
             .Where(l => l.Status != ListingStatus.Pending)
             .OrderBy(l => l.CreatedAt)
@@ -247,6 +249,7 @@ public class ListingService(IDbContext dbContext) : IListingService
     public async Task<List<Data.Models.Listing>> GetListingsByStatus(string status)
     {
         var historyListings =  dbContext.Listings
+            .AsNoTracking()
             .Include(l => l.Images)
             .Where(l => l.Status != ListingStatus.Pending);
 
@@ -264,4 +267,10 @@ public class ListingService(IDbContext dbContext) : IListingService
                 return await historyListings.ToListAsync();
         }
     }
+    
+    public async Task<List<Data.Models.Listing>> GetAllListingsRaw()
+    {
+        return await dbContext.Listings.AsNoTracking().ToListAsync();
+    }
+
 }
