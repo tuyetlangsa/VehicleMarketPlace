@@ -38,10 +38,9 @@
         <ScrollViewer Grid.Column="1" Margin="0" VerticalScrollBarVisibility="Auto">
             <StackPanel>
                 <TextBlock Text="{Binding Title}" FontSize="26" FontWeight="Bold" Margin="0,0,0,5"/>
-                <TextBlock Text="{Binding Price, StringFormat='Price: {0:C}'}" FontSize="18" FontWeight="SemiBold" Margin="0,0,0,15"/>
+                <TextBlock Text="{Binding Price, StringFormat='Price: {0:C}'}" FontSize="18" FontWeight="SemiBold" Margin="0,0,0,5"/>
 
-                <!-- Approve / Reject buttons -->
-                <StackPanel Orientation="Horizontal" Margin="0,10,0,20">
+                <StackPanel Orientation="Horizontal" Margin="0,0,0,20">
                     <Button Content="Approve"
                             Width="120"
                             Height="40"
@@ -79,13 +78,31 @@
                     </UniformGrid>
                 </StackPanel>
 
-                <StackPanel Margin="0,100,0,0">
+                
+                <StackPanel Margin="0,150,0,0">
                     <TextBlock Text="Description" FontSize="20" FontWeight="Bold" Margin="0,10,0,5"/>
                     <Border Background="#FFF" BorderBrush="#CCC" BorderThickness="1" CornerRadius="5" Padding="10">
                         <TextBlock Text="{Binding Description}" TextWrapping="Wrap"/>
                     </Border>
                 </StackPanel>
+                <StackPanel Margin="0,20,0,20">
+                    <TextBlock Text="Owner Information"
+                               FontSize="20"
+                               FontWeight="Bold"
+                               Margin="0,10,0,5"/>
 
+                    <UniformGrid Columns="2" Rows="4">
+
+                        <TextBlock Text="Name:" Margin="0,2"/>
+                        <TextBlock Text="{Binding User.FullName}" Margin="0,2"/>
+
+                        <TextBlock Text="Email:" Margin="0,2"/>
+                        <TextBlock Text="{Binding User.Email}" Margin="0,2"/>
+
+                        <TextBlock Text="Phone:" Margin="0,2"/>
+                        <TextBlock Text="{Binding User.Phone}" Margin="0,2"/>
+                    </UniformGrid>
+                </StackPanel>
             </StackPanel>
         </ScrollViewer>
     </Grid>
